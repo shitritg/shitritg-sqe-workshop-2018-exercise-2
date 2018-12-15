@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+       <script src="jquery-3.3.1.min.js">      </script>
+        <style>
+            table {
+                width: 100%;
+                height: 100%;
+            }
+
+            .textAreaWrapper {
+                width: 100%;
+                height: 80vh;
+            }
+
+            textarea {
+                width: 80%;
+                height: 95%;
+            }
+
+            .trueClass{
+                background-color: green;
+            }
+            .falseClass{
+                background-color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <td>
+                    <div class="paramsC">
+                        <textarea id="params" title="Enter The Input Vector"></textarea>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>
+                        <label>Enter code here</label>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <label>Parsed code here</label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="textAreaWrapper">
+                        <textarea id="codePlaceholder" title="Enter code here"></textarea>
+                    </div>
+                </td>
+                <td>
+                    <div class="textAreaWrapper">
+               <!--         <textarea id="parsedCode" title="Parse code"></textarea>-->
+                        <table id="SubTable">
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>
+                        <button id="codeSubmissionButton">Parse code</button>
+                    </div>
+                </td>
+                <td>
+                </td>
+            </tr>
+        </table>
+        <table id="res" style="width:100%" border="1">
+            <tr>
+                <th>Line</th>
+                <th>Type</th>
+                <th>Name</th>
+                <th style="width:content-box">Condition</th>
+                <th>Value</th>
+            </tr>
+        </table>
+
+        <script src="dist/bundle.js"></script>
+    </body>
+</html>
