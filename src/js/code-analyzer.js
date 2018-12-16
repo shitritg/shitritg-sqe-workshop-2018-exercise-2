@@ -11,7 +11,7 @@ let functionStartLine = -1;
 let functionEndLine = -1;
 //let finalLines = [];
 //let paededLevelOne = [];
-let globalParams = [];
+//let globalParams = [];
 let linesToShow = [];
 let stay;
 let ifs;
@@ -229,7 +229,7 @@ function TypeOfNotMemberExpressionLevelTwo(node,line,toShow) {
     return 'empty';
 }
 
-function checkIfInLines(line,name,toShow) {
+function checkIfInLines(line,name,toShow) {/////////frontal
     let ans = (lines.get(line)).get(name);
     if(toShow == 'no')
     {
@@ -244,8 +244,8 @@ function checkIfInLines(line,name,toShow) {
         else
         {
             let ans2 = (linesOrg.get(line)).get(name);
-            if(ans2==undefined)
-                return ans;
+            // if(ans2==undefined)
+            //    return ans;
             return ans2;}
     }}
 
@@ -270,21 +270,20 @@ function IfLineChanged(line, name, val,map) {
 
 }
 
-function  changeScope(iters,line,name,val,map){///////////////////////////////////
+function  changeScope(iters,line,name,val,map){//////////frontal
     let oldVal = (map.get(line)).get(name);
-    //let olsArr = oldVal.split(/(+\-*/])/);
     if(oldVal != val) {
         for (let i = line; i < line+iters+1; i++) {
-            if (oldVal == (map.get(i)).get(name)) {
-                let arr = map.get(i);
-                arr = arr.set(name, val);
-                map.set(i, arr);
-            }
+            // if (oldVal == (map.get(i)).get(name)) {
+            let arr = map.get(i);
+            arr = arr.set(name, val);
+            map.set(i, arr);
+            //  }
         }
     }
 }
 
-function  changeAll(line, name, val,map) {/////////////////////////////
+function  changeAll(line, name, val,map) {/////////////////////////////frontal
     let oldVal = (map.get(line)).get(name);
     if(oldVal != val) {
         while (line < maxKey()) {
@@ -295,12 +294,12 @@ function  changeAll(line, name, val,map) {/////////////////////////////
             }
             line = getNextMap(line);
         }
-        if (oldVal == (map.get(line)).get(name)) {
-            let arr = map.get(line);
-            arr = arr.set(name, val);
-            map.set(line, arr);
-        }
+        // if (oldVal == (map.get(line)).get(name)) {//assigment at the last line can delete
+        let arr = map.get(line);
+        arr = arr.set(name, val);
+        map.set(line, arr);
     }
+    // }
 }
 
 
@@ -364,7 +363,7 @@ function IfLineChangedToShow(line, name, val,map)
 
 }
 
-function  changeAllToShow(line, name, val,map) {/////////////////////////////
+function  changeAllToShow(line, name, val,map) {/////////////////////////////frontal
     let oldVal = (map.get(getNextMap(line))).get(name);
     val = returnVal(val);
     if(oldVal != val) {
@@ -376,12 +375,12 @@ function  changeAllToShow(line, name, val,map) {/////////////////////////////
             }
             line = getNextMap(line);
         }
-        if (oldVal == (map.get(line)).get(name)) {
-            let arr = map.get(line);
-            arr = arr.set(name, val);
-            map.set(line, arr);
-        }
+        //if (oldVal == (map.get(line)).get(name)) {
+        let arr = map.get(line);
+        arr = arr.set(name, val);
+        map.set(line, arr);
     }
+    //}
 }
 function returnVal(val) {
     if(typeof val != 'string')
@@ -429,7 +428,7 @@ function WhileIfStatementParse(node, metadata,level) {
     let type = 'while statement';
     if (node.type == 'IfStatement')
     {type = 'if statement';
-        elseStatement(node.alternate);
+        elseStatement(node.alternate,level);
         ifLines.set(metadata.start.line,{End:metadata.start.line+ node.consequent.body.length,Type:'if', Test:''});}
     // else if(node.type == 'ForStatement')
     //     type = 'for statement';
@@ -453,20 +452,20 @@ function insertToLinesToShow(line,type,name,cond,val,level) {
 
 function insertTestToIf(cond, line)
 {
-    if(ifLines.get(line) != undefined && ifLines.get(line).Type == 'if' || ifLines.get(line).Type == 'while')
-    {
-        let ifLine =  ifLines.get(line);
-        ifLine.Test = cond;
-        ifLines.set(line,ifLine);
-    }
+    // if(ifLines.get(line) != undefined && ifLines.get(line).Type == 'if' || ifLines.get(line).Type == 'while')
+    //{
+    let ifLine =  ifLines.get(line);
+    ifLine.Test = cond;
+    ifLines.set(line,ifLine);
+    //}
 }
 
-function insertWhileTodic(node,metadata)
+function insertWhileTodic(node,metadata)///////////////fronal
 {
-    if(node.body.body != null)
-        ifLines.set(metadata.start.line, {End:metadata.start.line+node.body.body.length,Type:'while',Test:''});
-    else
-        ifLines.set(metadata.start.line,{End:metadata.start.line+1,Type:'while',Test:''});
+    //if(node.body.body != null)
+    ifLines.set(metadata.start.line, {End:metadata.start.line+node.body.body.length,Type:'while',Test:''});
+    //else
+    //  ifLines.set(metadata.start.line,{End:metadata.start.line+1,Type:'while',Test:''});
 }
 
 
@@ -479,13 +478,14 @@ function SortParsed(parsedarrNew) {
 //     linesToShow.sort(function(a, b){return a - b;});
 //     return linesToShow;
 // }
-function elseStatement(node) {
+function elseStatement(node,level) {
     if (node!= null)
     {
         if (node.type!='IfStatement')
         {
             ifLines.set(node.loc.start.line,{End:node.loc.start.line+ node.body.length,Type:'else',Test:''});
             parsedarr.push({Line:node.loc.start.line, Type: 'else', Name: '' ,Condition:'', Value:'' });
+            insertToLinesToShow(node.loc.start.line,'else','','','',level);
         }
     }
 }
@@ -621,6 +621,17 @@ function getPrevMap(line) {
 
 }
 
+function getPrevIflines(line,map) {/////////frontal
+    let min = minKeyIfLines();
+    //if (line == min)
+    //    return min;
+    let curr = line-1;
+    while ( map.get(curr) == undefined && curr != min)
+        curr--;
+    return curr;
+
+}
+
 function getNextMap(line) {
     let max = maxKey();
     if (line == max)
@@ -632,45 +643,64 @@ function getNextMap(line) {
 
 }
 
-function checkLineAfterIf(line) {
+function checkLineAfterIf(line) {////changed
     for (let i of ifLines.values())
     {
         let prev = getPrevMap(line);
-        if(prev == i.End && i.Type == 'if')
+        if(prev == i.End)// && i.Type == 'if')//
             return true;
     }
     return false;
 }
 
 function firstLineNotIF(line) {
-    let curr = getPrevMap(line);
-    while (betweenIf(curr))
-        curr = getPrevMap(curr);
-    return lines.get(curr);
+    let sorted = new Map(Array.from(ifLines).sort((a, b) => {
+        return a[0] - b[0];})
+    );
+
+    let start = getPrevIflines(line,sorted);
+    //let last = getPrevMap(start);
+    while(checkLineAfterIf(start))
+    {
+        start = getPrevIflines(start,sorted);
+        //last = getPrevMap(start);
+    }
+    return lines.get(start);
+    // let curr = getPrevMap(line)
+    // let curr = getPrevMap(line);
+    // while (betweenIf(curr))
+    //     curr = getPrevMap(curr);
+    // return lines.get(curr);
 }
 
 function betweenIf(line) {
     for (let i of ifLines.keys())
     {
-        if(line >= i && line <= ifLines.get(i).End && ifLines.get(i).Type == 'if')
+        if(line >= i && line <= ifLines.get(i).End)// && ifLines.get(i).Type == 'if')//
             return true;
     }
     return false;
 }
 
-function linesUntillEndOfIf(line) {
-    let ans =Number.MAX_VALUE;
-    let temp=0;
-    for (let i of ifLines.values())
-    {
-        if(i.End >= line)
-        {
-            temp =  i.End - line;
-            if(temp < ans)
-                ans =temp;
-        }
-    }
-    return ans;
+function linesUntillEndOfIf(line) {//////////changed
+    //let ans =Number.MAX_VALUE;
+    let sorted = new Map(Array.from(ifLines).sort((a, b) => {
+        return a[0] - b[0];})
+    );
+    let start = getPrevIflines(line,sorted);
+    let end = ifLines.get(start).End;
+    return end-line;
+    // let temp=0;
+    // for (let i of ifLines.values())
+    // {
+    //     if(i.End >= line)
+    //     {
+    //         temp =  i.End - line;
+    //         if(temp < ans)
+    //             ans =temp;
+    //     }
+    // }
+    // return ans;
 }
 
 
@@ -694,17 +724,25 @@ function linesUntillEndOfIf(line) {
 // };
 //
 function minKey() {
-    var min = Number.MAX_VALUE;
-    for (var property of lines.keys()) {
+    let min = Number.MAX_VALUE;
+    for (let property of lines.keys()) {
         min = (min > property) ? property : min;
     }
     return min;
 }
 
+function minKeyIfLines() {//////////frontal
+    let min = Number.MAX_VALUE;
+    for (let property of ifLines.keys()) {
+        min = property;//(min > property) ? property : min;
+    }
+    return min;
+}
+
 function maxKey() {
-    var max = Number.MIN_VALUE;
+    let max;
     for (var property of lines.keys()) {
-        max = (max < property) ? property : max;
+        max = property;
     }
     return max;
 }
@@ -753,24 +791,24 @@ function initVars(parrsed) {
 
 function initParams(params) {////////////////////////////////
     let paramsArr;
-    if(globalParams.length == 0)
+    //if(globalParams.length == 0)
+    //{
+    if(params.includes(']'))
+        parsedarr = splirArr(params);
+    else
     {
-        if(params.includes(']'))
-            parsedarr = splirArr(params);
-        else
+        paramsArr = params.split(',');
+        //globalParams = paramsArr;
+        for (let line of lines.keys())
         {
-            paramsArr = params.split(',');
-            globalParams = paramsArr;
-            for (let line of lines.keys())
-            {
-                for (let i = 0; i < paramsArr.length; i++) {
-                    let name = findKey(paramIndexes,i);//guy
-                    let map = lines.get(line);
-                    map =  map.set(name, paramsArr[i]);
-                    lines.set(functionStartLine, map);}
-            }}
-        initglobals();
-    } else return;}
+            for (let i = 0; i < paramsArr.length; i++) {
+                let name = findKey(paramIndexes,i);//guy
+                let map = lines.get(line);
+                map =  map.set(name, paramsArr[i]);
+                lines.set(functionStartLine, map);}
+        }}
+    initglobals();
+}//}
 
 function  splirArr(params) {
     let str=''; let arr = ''; let counter =0; let indexInparams=0;
@@ -873,7 +911,7 @@ function finellize() {
     vars = new Map();
     functionStartLine = -1;
     functionEndLine = -1;
-    globalParams = [];
+    //globalParams = [];
 }
 
 // function returnIfLines() {
@@ -890,22 +928,31 @@ function retuenLinesToShow() {
 }
 
 function checkIfs() {
+    let flag = false;
     let answers = new Map();
     let sorted = new Map(Array.from(ifLines).sort((a, b) => {
-        return a[0] - b[0];})
+        return a[0] - b[0];
+    })
     );
-    for(let ifstatment of sorted.keys())
-    {
-        if(sorted.get(ifstatment).Type == 'if')
-        {
+    for (let ifstatment of sorted.keys()) {
+        if (sorted.get(ifstatment).Type == 'if') {
             let ans = eval(sorted.get(ifstatment).Test);
-            answers.set(ifstatment,ans);
-            if(ans)
-                return answers;
-            else
-                answers.set(ifstatment,ans);
+            answers.set(ifstatment, ans);
+            if (ans)
+                flag = true;
+        }
+        else if (sorted.get(ifstatment).Type == 'else') {
+            answers = colorElse(answers, flag, ifstatment);
         }
     }
+    return answers;
+}
+
+function colorElse(answers,flag,ifstatment) {
+    if(!flag)
+        answers.set(ifstatment,true);
+    else
+        answers.set(ifstatment,false);
     return answers;
 }
 
@@ -917,7 +964,7 @@ function initAll(codeToParse,params) {
     let final = parseCode(codeToParse,2);
     //let codeToshow = retuenLinesToShow();
     ifs = checkIfs(final);
-    console.log(JSON.stringify(final));
+    //console.log(JSON.stringify(final));
     return final;
 }
 function returnStay() {
@@ -933,4 +980,5 @@ export {initAll};
 export {parseCode};
 export {finellize};
 export {retuenLinesToShow};
+export {getPrevMap};
 

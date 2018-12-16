@@ -10,24 +10,8 @@ $(document).ready(function () {
             table2.deleteRow(0);
         let codeToParse = $('#codePlaceholder').val();
         let params = $('#params').val();
-        //phazeOne(codeToParse);
-        //phazeTwo(codeToParse,params);
-        console.log(JSON.stringify(initAll('function foo(x, y, z){\n' +
-            '    let a = z + 1;\n' +
-            '    let b = a + z;\n' +
-            '    let c = 0;\n' +
-            '    \n' +
-            '    if (b < z) {\n' +
-            '        c = c + 5;\n' +
-            '        return  z + c;\n' +
-            '    } else if (!x && y==\'hellow\') {\n' +
-            '        c = c + x + 5;\n' +
-            '        return  z + c;\n' +
-            '    } else {\n' +
-            '        c = c + z + 5;\n' +
-            '        return  c;\n' +
-            '    }\n' +
-            '}','false,\'hellow\',3')));
+        phazeOne(codeToParse);
+        phazeTwo(codeToParse,params);
         //let linesToShow = retuenLinesToShow();
         //let stay = insertToLinesNotToStay(parsedCode);
         //let final = parseCode(codeToParse,2);
