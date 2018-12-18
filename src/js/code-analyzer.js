@@ -273,11 +273,14 @@ function IfLineChanged(line, name, val,map) {
 function  changeScope(iters,line,name,val,map){//////////frontal
     let oldVal = (map.get(line)).get(name);
     if(oldVal != val) {
-        for (let i = line; i < line+iters+1; i++) {
+        for (let i = line; i <= iters; i++) {
             // if (oldVal == (map.get(i)).get(name)) {
             let arr = map.get(i);
-            arr = arr.set(name, val);
-            map.set(i, arr);
+            if(arr != undefined)
+            {
+                arr = arr.set(name, val);
+                map.set(i, arr);
+            }
             //  }
         }
     }
@@ -393,19 +396,22 @@ function  changeScopeToShow(iters,line,name,val,map){///////////////////////////
     let oldVal = (map.get(getNextMap(line))).get(name);
     //let olsArr = oldVal.split(/(+\-*/])/);
     if(oldVal != val) {
-        for (let i = line; i < line+iters+1; i++) {
-            if (oldVal == (map.get(i)).get(name)) {
-                let arr = map.get(i);
-                arr = arr.set(name, val);
-                map.set(i, arr);
+        for (let i = line; i <= iters; i++) {
+            let arr = map.get(i);
+            if(arr != undefined)
+            {
+                if (oldVal == (map.get(i)).get(name)) {
+                    arr = arr.set(name, val);
+                    map.set(i, arr);
+                }
             }
         }
     }
 }
 function AssignmentExpressionParse(node, metadata,level)
 {
-    let rightToshow =TypeOf(node.right, metadata.start.line, level);
-    let right =TypeOf(node.right, metadata.start.line, level);
+    let rightToshow =TypeOf(node.right, metadata.start.line, level,'yes');
+    let right =TypeOf(node.right, metadata.start.line, level,'no');
     let left = TypeOf(node.left, metadata.start.line, 1);
     if (right== 'empty')
     {
@@ -428,12 +434,12 @@ function WhileIfStatementParse(node, metadata,level) {
     let type = 'while statement';
     if (node.type == 'IfStatement')
     {type = 'if statement';
-        elseStatement(node.alternate,level);
-        ifLines.set(metadata.start.line,{End:metadata.start.line+ node.consequent.body.length,Type:'if', Test:''});}
+        elseStatement(node.alternate,level,metadata.start.line);
+        insertIfTodic(node,metadata,level);}
     // else if(node.type == 'ForStatement')
     //     type = 'for statement';
     else
-    {   insertWhileTodic(node,metadata);}
+    {   insertWhileTodic(node,metadata,level);}
     if(node.test.type== 'BinaryExpression' || node.test.type== 'LogicalExpression')
     {cond = Recursive(node.test,metadata.start.line,level,'no');
         condToShow = Recursive(node.test,metadata.start.line,level,'yes');}
@@ -460,13 +466,44 @@ function insertTestToIf(cond, line)
     //}
 }
 
-function insertWhileTodic(node,metadata)///////////////fronal
+function insertWhileTodic(node,metadata,level)///////////////fronal
 {
-    //if(node.body.body != null)
-    ifLines.set(metadata.start.line, {End:metadata.start.line+node.body.body.length,Type:'while',Test:''});
-    //else
+    //if(checkInIfWhile(node.body.body))
+    if(level==1)
+        ifLines.set(metadata.start.line, {End:metadata.end.line,Type:'while',Test:''});
+    //else//End:metadata.start.line+node.body.body.length
     //  ifLines.set(metadata.start.line,{End:metadata.start.line+1,Type:'while',Test:''});
 }
+
+function  insertIfTodic(node,metadata,level) {
+    // if(checkInIfWhile(node.consequent.body))
+    if(level==1)
+        ifLines.set(metadata.start.line,{End:node.consequent.loc.end.line,Type:'if', Test:''});
+    // else
+    //     ifLines.set(metadata.start.line,{End:metadata.start.line+ node.consequent.body.length,Type:'if', Test:''});
+}
+
+// function findLength(node,metadata) {
+//     if(node.type == 'WhileStatement')
+//     {
+//         if(!checkInIfWhile(node.body.body))
+//             return node.body.body.length;
+//     }
+//     else if(node.type == 'IfStatement')
+//     {
+//         if(!checkInIfWhile(node.body.body))
+//             return node.body.body.length;
+//     }
+//
+// }
+//
+// function checkInIfWhile(node) {
+//     for (let i = 0; i < node.length; i++) {
+//         if(node[i].type == 'WhileStatement' || node[i].type == '"IfStatement"')
+//             return true;
+//     }
+//     return false;
+// }
 
 
 function SortParsed(parsedarrNew) {
@@ -478,17 +515,24 @@ function SortParsed(parsedarrNew) {
 //     linesToShow.sort(function(a, b){return a - b;});
 //     return linesToShow;
 // }
-function elseStatement(node,level) {
+function elseStatement(node,level,ifLine) {
     if (node!= null)
     {
         if (node.type!='IfStatement')
         {
-            ifLines.set(node.loc.start.line,{End:node.loc.start.line+ node.body.length,Type:'else',Test:''});
+            if(level==1)
+                ifLines.set(node.loc.start.line,{End:node.loc.end.line,Type:'else',Test:'',Ifline:ifLine});
             parsedarr.push({Line:node.loc.start.line, Type: 'else', Name: '' ,Condition:'', Value:'' });
             insertToLinesToShow(node.loc.start.line,'else','','','',level);
         }
     }
 }
+// function  insertElseTodic(node,metadata) {
+//     if(checkInIfWhile(node))
+//         ifLines.set(metadata.start.line,{End:node.consequent.end.line,Type:'if', Test:''});
+//     else
+//         ifLines.set(node.loc.start.line,{End:node.loc.end.line+ node.body.length,Type:'else',Test:''});
+// }
 
 function insertGlobals(parsed)
 {
@@ -510,6 +554,7 @@ function checkIfGlobal(line)
 
 function linesToMap(parsedarrNew,params) {
     parsedarrNew = SortParsed(parsedarrNew);
+    chengeiflines(parsedarrNew);
     insertGlobals(parsedarrNew);
     //linesToShow = SortLinesToShow();
     initVars(parsedarrNew);
@@ -531,6 +576,39 @@ function next(line,parsedarrNew) {
             CheckAndInsert(parsedarrNew[i],line);
         }
     }
+}
+
+function chengeiflines(parsedarrNew) {
+    for(let ifLine of ifLines.keys())
+    {
+        let end = ifLines.get(ifLine).End;
+        let ans = existLine(end,parsedarrNew);
+        if(!ans)
+        {
+            changeIfLines(end,parsedarrNew,ifLine);
+        }
+
+    }
+}
+function existLine(end,parsedarrNew) {
+    for(let parsedLine of parsedarrNew)
+    {
+        if(parsedLine.Line == end)
+            return true;
+    }
+    return false;
+}
+
+function changeIfLines(end,parsedarrNew,ifLine) {
+    let curr = end-1;
+    while (!existLine(curr,parsedarrNew))
+    {
+        curr--;
+    }
+    let ifLineTochange =  ifLines.get(ifLine);
+    ifLineTochange.End = curr;
+    ifLines.set(ifLine,ifLineTochange);
+
 }
 
 function changeLine(line) {//////////////////////////////////
@@ -689,8 +767,8 @@ function linesUntillEndOfIf(line) {//////////changed
     );
     let start = getPrevIflines(line,sorted);
     let end = ifLines.get(start).End;
-    return end-line;
-    // let temp=0;
+    return end;
+    //let end = ifLines.get(start).End;//return end-line;// let temp=0;
     // for (let i of ifLines.values())
     // {
     //     if(i.End >= line)
@@ -928,7 +1006,6 @@ function retuenLinesToShow() {
 }
 
 function checkIfs() {
-    let flag = false;
     let answers = new Map();
     let sorted = new Map(Array.from(ifLines).sort((a, b) => {
         return a[0] - b[0];
@@ -938,10 +1015,11 @@ function checkIfs() {
         if (sorted.get(ifstatment).Type == 'if') {
             let ans = eval(sorted.get(ifstatment).Test);
             answers.set(ifstatment, ans);
-            if (ans)
-                flag = true;
+            //if (ans)
+            //    flag = true;
         }
         else if (sorted.get(ifstatment).Type == 'else') {
+            let flag = answers.get((sorted.get(ifstatment)).Ifline);
             answers = colorElse(answers, flag, ifstatment);
         }
     }

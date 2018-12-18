@@ -32,6 +32,14 @@ describe('The javascript parser', () => {
         );
     });
 });
+describe('The javascript parser', () => {
+    it('is parsing a while true', () => {
+        assert.equal(
+            JSON.stringify(parseCode('while (true) {}',1)),
+            '[{"Line":1,"Type":"while statement","Name":"","Condition":true,"Value":""}]'
+        );
+    });
+});
 
 // describe('The javascript parser', () => {
 //     it('is parsing a function declaration', () => {
@@ -160,14 +168,7 @@ describe('The javascript parser', () => {
 //         );
 //     });
 // });
-describe('The javascript parser', () => {
-    it('is parsing a while true', () => {
-        assert.equal(
-            JSON.stringify(parseCode('while (true) {}')),
-            '[{"Line":1,"Type":"while statement","Name":"","Condition":true,"Value":""}]'
-        );
-    });
-});
+
 
 // describe('The javascript parser', () => {
 //     it('is parsing a while true', () => {
@@ -259,9 +260,27 @@ describe('The javascript parser', () => {
     });
 });
 
-describe('The javascript parser', () => {
-    it('is parsing a simple phaze2', () => {
-        assert.equal(JSON.stringify(initAll('function foo(x, y, z){\n' +
+// describe('The javascript parser', () => {
+//     it('is parsing a simple phaze2', () => {
+//         assert.equal(JSON.stringify(initAll('function foo(x, y, z){\n' +
+//             '    let a = x + 1;\n' +
+//             '    let b = a + y;\n' +
+//             '    let c = 0;\n' +
+//             '    \n' +
+//             '    while (a < z) {\n' +
+//             '        c = a + b;\n' +
+//             '        z = c * 2;\n' +
+//             '   if(z==12)\n' +
+//             '{ \n' +
+//             '    return z;\n' +
+//             '}\n' +
+//             '}\n' +
+//             '}','1,2,3')),
+//         '[{"Line":2,"Type":"variable declaration","Name":"a","Condition":"","Value":"(1+1)"},{"Line":3,"Type":"variable declaration","Name":"b","Condition":"","Value":"((1+1)+2)"},{"Line":4,"Type":"variable declaration","Name":"c","Condition":"","Value":0},{"Line":7,"Type":"assignment expression","Name":"c","Condition":"","Value":"((1+1)+((1+1)+2))"},{"Line":8,"Type":"assignment expression","Name":"z","Condition":"","Value":"(((1+1)+((1+1)+2))*2)"},{"Line":11,"Type":"return statement","Name":"","Condition":"","Value":"(c*2)"},{"Line":9,"Type":"if statement","Name":"","Condition":"((((1+1)+((1+1)+2))*2)==12)","Value":""},{"Line":6,"Type":"while statement","Name":"","Condition":"((1+1)<3)","Value":""},{"Line":1,"Type":"FunctionDeclaration","Name":"foo","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"x","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"y","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"z","Condition":"","Value":""}]');
+//     });
+// });
+
+describe('The javascript parser', () => {it('is parsing a simple phaze2', () => {assert.equal(JSON.stringify(initAll('function foo(x, y, z){\n' +
             '    let a = x + 1;\n' +
             '    let b = a + y;\n' +
             '    let c = 0;\n' +
@@ -269,15 +288,18 @@ describe('The javascript parser', () => {
             '    while (a < z) {\n' +
             '        c = a + b;\n' +
             '        z = c * 2;\n' +
-            '   if(z==12)\n' +
-            '{ \n' +
+            'if(c>a)\n' +
+            '{\n' +
+            'c=a;\n' +
+            'if(c>a)\n' +
+            '{\n' +
+            'return c;\n' +
+            '}\n' +
+            '}\n' +
+            '    }\n' +
+            '    \n' +
             '    return z;\n' +
-            '}\n' +
-            '}\n' +
-            '}','1,2,3')),
-        '[{"Line":2,"Type":"variable declaration","Name":"a","Condition":"","Value":"(1+1)"},{"Line":3,"Type":"variable declaration","Name":"b","Condition":"","Value":"((1+1)+2)"},{"Line":4,"Type":"variable declaration","Name":"c","Condition":"","Value":0},{"Line":7,"Type":"assignment expression","Name":"c","Condition":"","Value":"((1+1)+((1+1)+2))"},{"Line":8,"Type":"assignment expression","Name":"z","Condition":"","Value":"(((1+1)+((1+1)+2))*2)"},{"Line":11,"Type":"return statement","Name":"","Condition":"","Value":"(c*2)"},{"Line":9,"Type":"if statement","Name":"","Condition":"((((1+1)+((1+1)+2))*2)==12)","Value":""},{"Line":6,"Type":"while statement","Name":"","Condition":"((1+1)<3)","Value":""},{"Line":1,"Type":"FunctionDeclaration","Name":"foo","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"x","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"y","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"z","Condition":"","Value":""}]');
-    });
-});
+            '}','1,2,3')),'[{"Line":2,"Type":"variable declaration","Name":"a","Condition":"","Value":"(1+1)"},{"Line":3,"Type":"variable declaration","Name":"b","Condition":"","Value":"((1+1)+2)"},{"Line":4,"Type":"variable declaration","Name":"c","Condition":"","Value":0},{"Line":7,"Type":"assignment expression","Name":"c","Condition":"","Value":"((1+1)+((1+1)+2))"},{"Line":8,"Type":"assignment expression","Name":"z","Condition":"","Value":"(((1+1)+((1+1)+2))*2)"},{"Line":11,"Type":"assignment expression","Name":"c","Condition":"","Value":"(1+1)"},{"Line":14,"Type":"return statement","Name":"","Condition":"","Value":"(1+1)"},{"Line":12,"Type":"if statement","Name":"","Condition":"((1+1)>(1+1))","Value":""},{"Line":9,"Type":"if statement","Name":"","Condition":"(((1+1)+((1+1)+2))>(1+1))","Value":""},{"Line":6,"Type":"while statement","Name":"","Condition":"((1+1)<3)","Value":""},{"Line":19,"Type":"return statement","Name":"","Condition":"","Value":"(c*2)"},{"Line":1,"Type":"FunctionDeclaration","Name":"foo","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"x","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"y","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"z","Condition":"","Value":""}]');});});
 
 describe('The javascript parser', () => {
     it('is parsing a array3 phaze2', () => {
@@ -370,6 +392,27 @@ describe('The javascript parser', () => {
             '}','1,2,3')),'[{"Line":2,"Type":"variable declaration","Name":"a","Condition":"","Value":"(1+1)"},{"Line":3,"Type":"variable declaration","Name":"b","Condition":"","Value":"((1+1)+2)"},{"Line":4,"Type":"variable declaration","Name":"c","Condition":"","Value":0},{"Line":7,"Type":"assignment expression","Name":"c","Condition":"","Value":"(0+5)"},{"Line":6,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<3)","Value":""},{"Line":1,"Type":"FunctionDeclaration","Name":"foo","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"x","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"y","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"z","Condition":"","Value":""}]');
     });
 });
+// describe('The javascript parser', () => {
+//     it('is parsing a 2 phaze2', () => {
+//         assert.equal(JSON.stringify(initAll('function foo(x, y, z){\n' +
+//             '    let a = x + 1;\n' +
+//             '    let b = a + y;\n' +
+//             '    let c;\n' +
+//             '    \n' +
+//             '    if (b < z) {\n' +
+//             '        c = 5;\n' +
+//             '        return x + y + z + c;\n' +
+//             '    } else if (b < z * 2) {\n' +
+//             '        c = c + x + 5;\n' +
+//             '        return x + y + z + c;\n' +
+//             '    } else {\n' +
+//             '        c = c + z + 5;\n' +
+//             '        return x + y + z + c;\n' +
+//             '    }\n' +
+//             '}','1,2,3')),'[{"Line":2,"Type":"variable declaration","Name":"a","Condition":"","Value":"(1+1)"},{"Line":3,"Type":"variable declaration","Name":"b","Condition":"","Value":"((1+1)+2)"},{"Line":4,"Type":"variable declaration","Name":"c","Condition":"","Value":null},{"Line":7,"Type":"assignment expression","Name":"c","Condition":"","Value":5},{"Line":8,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+5)"},{"Line":10,"Type":"assignment expression","Name":"c","Condition":"","Value":"((c+1)+5)"},{"Line":11,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((c+1)+5))"},{"Line":13,"Type":"assignment expression","Name":"c","Condition":"","Value":"((c+3)+5)"},{"Line":14,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((c+3)+5))"},{"Line":12,"Type":"else","Name":"","Condition":"","Value":""},{"Line":9,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<(3*2))","Value":""},{"Line":6,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<3)","Value":""},{"Line":1,"Type":"FunctionDeclaration","Name":"foo","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"x","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"y","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"z","Condition":"","Value":""}]');
+//     });
+// });
+
 describe('The javascript parser', () => {
     it('is parsing a 2 phaze2', () => {
         assert.equal(JSON.stringify(initAll('function foo(x, y, z){\n' +
@@ -381,13 +424,13 @@ describe('The javascript parser', () => {
             '        c = 5;\n' +
             '        return x + y + z + c;\n' +
             '    } else if (b < z * 2) {\n' +
-            '        c = c + x + 5;\n' +
+            '        c = x + 5;\n' +
             '        return x + y + z + c;\n' +
             '    } else {\n' +
-            '        c = c + z + 5;\n' +
+            '        c = z + 5;\n' +
             '        return x + y + z + c;\n' +
             '    }\n' +
-            '}','1,2,3')),'[{"Line":2,"Type":"variable declaration","Name":"a","Condition":"","Value":"(1+1)"},{"Line":3,"Type":"variable declaration","Name":"b","Condition":"","Value":"((1+1)+2)"},{"Line":4,"Type":"variable declaration","Name":"c","Condition":"","Value":null},{"Line":7,"Type":"assignment expression","Name":"c","Condition":"","Value":5},{"Line":8,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+5)"},{"Line":10,"Type":"assignment expression","Name":"c","Condition":"","Value":"((c+1)+5)"},{"Line":11,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((c+1)+5))"},{"Line":13,"Type":"assignment expression","Name":"c","Condition":"","Value":"((c+3)+5)"},{"Line":14,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((c+3)+5))"},{"Line":12,"Type":"else","Name":"","Condition":"","Value":""},{"Line":9,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<(3*2))","Value":""},{"Line":6,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<3)","Value":""},{"Line":1,"Type":"FunctionDeclaration","Name":"foo","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"x","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"y","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"z","Condition":"","Value":""}]');
+            '}','1,2,3')),'[{"Line":2,"Type":"variable declaration","Name":"a","Condition":"","Value":"(1+1)"},{"Line":3,"Type":"variable declaration","Name":"b","Condition":"","Value":"((1+1)+2)"},{"Line":4,"Type":"variable declaration","Name":"c","Condition":"","Value":null},{"Line":7,"Type":"assignment expression","Name":"c","Condition":"","Value":5},{"Line":8,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+5)"},{"Line":10,"Type":"assignment expression","Name":"c","Condition":"","Value":"(1+5)"},{"Line":11,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+(1+5))"},{"Line":13,"Type":"assignment expression","Name":"c","Condition":"","Value":"(3+5)"},{"Line":14,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+(3+5))"},{"Line":12,"Type":"else","Name":"","Condition":"","Value":""},{"Line":9,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<(3*2))","Value":""},{"Line":6,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<3)","Value":""},{"Line":1,"Type":"FunctionDeclaration","Name":"foo","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"x","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"y","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"z","Condition":"","Value":""}]');
     });
 });
 describe('The javascript parser', () => {
@@ -430,10 +473,10 @@ describe('The javascript parser', () => {it('is parsing a 0 phaze2', () => {asse
             '        c = c + z + 5;\n' +
             '        return x + y + z + c;\n' +
             '    }\n' +
-            '}\n','1,2,3')),'[{"Line":1,"Type":"variable declaration","Name":"a1","Condition":"","Value":2},{"Line":2,"Type":"variable declaration","Name":"ba","Condition":"","Value":3},{"Line":4,"Type":"variable declaration","Name":"a","Condition":"","Value":"(1+1)"},{"Line":5,"Type":"variable declaration","Name":"b","Condition":"","Value":"((1+1)+2)"},{"Line":6,"Type":"variable declaration","Name":"c","Condition":"","Value":0},{"Line":9,"Type":"assignment expression","Name":"a","Condition":"","Value":"a1"},{"Line":10,"Type":"assignment expression","Name":"c","Condition":"","Value":"(0+5)"},{"Line":11,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+(0+5))"},{"Line":13,"Type":"assignment expression","Name":"a","Condition":"","Value":"ba"},{"Line":14,"Type":"assignment expression","Name":"c","Condition":"","Value":"((0+1)+5)"},{"Line":15,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((0+1)+5))"},{"Line":17,"Type":"assignment expression","Name":"c","Condition":"","Value":"((0+3)+5)"},{"Line":18,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((0+3)+5))"},{"Line":16,"Type":"else","Name":"","Condition":"","Value":""},{"Line":12,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<(3*2))","Value":""},{"Line":8,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<3)","Value":""},{"Line":3,"Type":"FunctionDeclaration","Name":"foo","Condition":"","Value":""},{"Line":3,"Type":"variable declaration","Name":"x","Condition":"","Value":""},{"Line":3,"Type":"variable declaration","Name":"y","Condition":"","Value":""},{"Line":3,"Type":"variable declaration","Name":"z","Condition":"","Value":""}]');});});
+            '}\n','1,2,3')),'[{"Line":1,"Type":"variable declaration","Name":"a1","Condition":"","Value":2},{"Line":2,"Type":"variable declaration","Name":"ba","Condition":"","Value":3},{"Line":4,"Type":"variable declaration","Name":"a","Condition":"","Value":"(1+1)"},{"Line":5,"Type":"variable declaration","Name":"b","Condition":"","Value":"((1+1)+2)"},{"Line":6,"Type":"variable declaration","Name":"c","Condition":"","Value":0},{"Line":9,"Type":"assignment expression","Name":"a","Condition":"","Value":2},{"Line":10,"Type":"assignment expression","Name":"c","Condition":"","Value":"(0+5)"},{"Line":11,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+(0+5))"},{"Line":13,"Type":"assignment expression","Name":"a","Condition":"","Value":3},{"Line":14,"Type":"assignment expression","Name":"c","Condition":"","Value":"((0+1)+5)"},{"Line":15,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((0+1)+5))"},{"Line":17,"Type":"assignment expression","Name":"c","Condition":"","Value":"((0+3)+5)"},{"Line":18,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((0+3)+5))"},{"Line":16,"Type":"else","Name":"","Condition":"","Value":""},{"Line":12,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<(3*2))","Value":""},{"Line":8,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<3)","Value":""},{"Line":3,"Type":"FunctionDeclaration","Name":"foo","Condition":"","Value":""},{"Line":3,"Type":"variable declaration","Name":"x","Condition":"","Value":""},{"Line":3,"Type":"variable declaration","Name":"y","Condition":"","Value":""},{"Line":3,"Type":"variable declaration","Name":"z","Condition":"","Value":""}]');});});
 
 describe('The javascript parser', () => {
-    it('is parsing a 2 phaze2', () => {
+    it('is parsing a 21 phaze2', () => {
         assert.equal(JSON.stringify(initAll('function foo(x, y, z){\n' +
             '    let a = x + 1;\n' +
             '    let b = a + y;\n' +
@@ -451,8 +494,7 @@ describe('The javascript parser', () => {
             '    }\n' +
             'return c;\n' +
             '}\n','1,2,3')),'[{"Line":2,"Type":"variable declaration","Name":"a","Condition":"","Value":"(1+1)"},{"Line":3,"Type":"variable declaration","Name":"b","Condition":"","Value":"((1+1)+2)"},{"Line":4,"Type":"variable declaration","Name":"c","Condition":"","Value":0},{"Line":7,"Type":"assignment expression","Name":"c","Condition":"","Value":"(0+5)"},{"Line":8,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+(0+5))"},{"Line":10,"Type":"assignment expression","Name":"c","Condition":"","Value":"((0+1)+5)"},{"Line":11,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((0+1)+5))"},{"Line":13,"Type":"assignment expression","Name":"c","Condition":"","Value":"((0+3)+5)"},{"Line":14,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((0+3)+5))"},{"Line":12,"Type":"else","Name":"","Condition":"","Value":""},{"Line":9,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<(3*2))","Value":""},{"Line":6,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<3)","Value":""},{"Line":16,"Type":"return statement","Name":"","Condition":"","Value":0},{"Line":1,"Type":"FunctionDeclaration","Name":"foo","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"x","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"y","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"z","Condition":"","Value":""}]');
-    });
-});
+    });});
 
 describe('The javascript parser', () => {
     it('is parsing a green map', () => {
@@ -473,5 +515,24 @@ describe('The javascript parser', () => {
             '    }\n' +
             'return c;\n' +
             '}\n','1,2,3')),'[{"Line":2,"Type":"variable declaration","Name":"a","Condition":"","Value":"(1+1)"},{"Line":3,"Type":"variable declaration","Name":"b","Condition":"","Value":"((1+1)+2)"},{"Line":4,"Type":"variable declaration","Name":"c","Condition":"","Value":0},{"Line":7,"Type":"assignment expression","Name":"c","Condition":"","Value":"(0+5)"},{"Line":8,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+(0+5))"},{"Line":10,"Type":"assignment expression","Name":"c","Condition":"","Value":"((0+1)+5)"},{"Line":11,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((0+1)+5))"},{"Line":13,"Type":"assignment expression","Name":"c","Condition":"","Value":"((0+3)+5)"},{"Line":14,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((0+3)+5))"},{"Line":12,"Type":"else","Name":"","Condition":"","Value":""},{"Line":9,"Type":"if statement","Name":"","Condition":"((((1+1)+2)*3)<(3*2))","Value":""},{"Line":6,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<3)","Value":""},{"Line":16,"Type":"return statement","Name":"","Condition":"","Value":0},{"Line":1,"Type":"FunctionDeclaration","Name":"foo","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"x","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"y","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"z","Condition":"","Value":""}]');
-    });
-});
+    });});
+describe('The javascript parser', () => {it('is parsing a line map', () => {
+    assert.equal(JSON.stringify(initAll('function foo(x, y, z){\n' +
+            '    let a = x + 1;\n' +
+            '    let b = a + y;\n' +
+            '    let c = 0;\n' +
+            '    \n' +
+            '    if (b < z) {\n' +
+            '        c = c + 5;\n' +
+            '        return x + y + z + c;\n' +
+            '    } \n' +
+            'else if (b < z * 2) {\n' +
+            '        c = c + x + 5;\n' +
+            '        return x + y + z + c;\n' +
+            '    }\n' +
+            ' else {\n' +
+            '        c = c + z + 5;\n' +
+            '        return x + y + z + c;\n' +
+            '    }\n' +
+            '}\n','1,2,3')),'[{"Line":2,"Type":"variable declaration","Name":"a","Condition":"","Value":"(1+1)"},{"Line":3,"Type":"variable declaration","Name":"b","Condition":"","Value":"((1+1)+2)"},{"Line":4,"Type":"variable declaration","Name":"c","Condition":"","Value":0},{"Line":7,"Type":"assignment expression","Name":"c","Condition":"","Value":"(0+5)"},{"Line":8,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+(0+5))"},{"Line":11,"Type":"assignment expression","Name":"c","Condition":"","Value":"((0+1)+5)"},{"Line":12,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((0+1)+5))"},{"Line":15,"Type":"assignment expression","Name":"c","Condition":"","Value":"((0+3)+5)"},{"Line":16,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((0+3)+5))"},{"Line":14,"Type":"else","Name":"","Condition":"","Value":""},{"Line":10,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<(3*2))","Value":""},{"Line":6,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<3)","Value":""},{"Line":1,"Type":"FunctionDeclaration","Name":"foo","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"x","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"y","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"z","Condition":"","Value":""}]');
+});});
