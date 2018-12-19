@@ -536,3 +536,31 @@ describe('The javascript parser', () => {it('is parsing a line map', () => {
             '    }\n' +
             '}\n','1,2,3')),'[{"Line":2,"Type":"variable declaration","Name":"a","Condition":"","Value":"(1+1)"},{"Line":3,"Type":"variable declaration","Name":"b","Condition":"","Value":"((1+1)+2)"},{"Line":4,"Type":"variable declaration","Name":"c","Condition":"","Value":0},{"Line":7,"Type":"assignment expression","Name":"c","Condition":"","Value":"(0+5)"},{"Line":8,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+(0+5))"},{"Line":11,"Type":"assignment expression","Name":"c","Condition":"","Value":"((0+1)+5)"},{"Line":12,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((0+1)+5))"},{"Line":15,"Type":"assignment expression","Name":"c","Condition":"","Value":"((0+3)+5)"},{"Line":16,"Type":"return statement","Name":"","Condition":"","Value":"(((1+2)+3)+((0+3)+5))"},{"Line":14,"Type":"else","Name":"","Condition":"","Value":""},{"Line":10,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<(3*2))","Value":""},{"Line":6,"Type":"if statement","Name":"","Condition":"(((1+1)+2)<3)","Value":""},{"Line":1,"Type":"FunctionDeclaration","Name":"foo","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"x","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"y","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"z","Condition":"","Value":""}]');
 });});
+
+describe('The javascript parser', () => {it('is parsing a binary memberExp', () => {
+    assert.equal(JSON.stringify(initAll('function foo(x, y, z, q){\n' +
+        '    let a = x + 1;\n' +
+        '    let b = a + y;\n' +
+        '    let c = z[a];\n' +
+        '    \n' +
+        '    if (b < q) {\n' +
+        '        c = c + 5;\n' +
+        '        a= z[a];\n' +
+        '            if (b>a){\n' +
+        '               c = c+a;\n' +
+        '            }\n' +
+        '            else{\n' +
+        '               c=c-a;\n' +
+        '            }\n' +
+        '        return a + c + b;\n' +
+        '    } \n' +
+        'else if (b < a * 2) {\n' +
+        '        c = c + x + 5;\n' +
+        '        return a + c + a;\n' +
+        '    }\n' +
+        ' else {\n' +
+        '        c = c + a + 5;\n' +
+        '        return a + c + a;\n' +
+        '    }\n' +
+        '}','0,1,[2,3],4')),'[{"Line":2,"Type":"variable declaration","Name":"a","Condition":"","Value":"(0+1)"},{"Line":3,"Type":"variable declaration","Name":"b","Condition":"","Value":"((0+1)+1)"},{"Line":4,"Type":"variable declaration","Name":"c","Condition":"","Value":"3"},{"Line":7,"Type":"assignment expression","Name":"c","Condition":"","Value":"(3+5)"},{"Line":8,"Type":"assignment expression","Name":"a","Condition":"","Value":"3"},{"Line":10,"Type":"assignment expression","Name":"c","Condition":"","Value":"((3+5)+3)"},{"Line":13,"Type":"assignment expression","Name":"c","Condition":"","Value":"((3+5)-3)"},{"Line":12,"Type":"else","Name":"","Condition":"","Value":""},{"Line":9,"Type":"if statement","Name":"","Condition":"(((0+1)+1)>3)","Value":""},{"Line":15,"Type":"return statement","Name":"","Condition":"","Value":"((3+(3+5))+((0+1)+1))"},{"Line":18,"Type":"assignment expression","Name":"c","Condition":"","Value":"((3+0)+5)"},{"Line":19,"Type":"return statement","Name":"","Condition":"","Value":"(((0+1)+((3+0)+5))+(0+1))"},{"Line":22,"Type":"assignment expression","Name":"c","Condition":"","Value":"((3+(0+1))+5)"},{"Line":23,"Type":"return statement","Name":"","Condition":"","Value":"(((0+1)+((3+(0+1))+5))+(0+1))"},{"Line":21,"Type":"else","Name":"","Condition":"","Value":""},{"Line":17,"Type":"if statement","Name":"","Condition":"(((0+1)+1)<((0+1)*2))","Value":""},{"Line":6,"Type":"if statement","Name":"","Condition":"(((0+1)+1)<4)","Value":""},{"Line":1,"Type":"FunctionDeclaration","Name":"foo","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"x","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"y","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"z","Condition":"","Value":""},{"Line":1,"Type":"variable declaration","Name":"q","Condition":"","Value":""}]');
+});});

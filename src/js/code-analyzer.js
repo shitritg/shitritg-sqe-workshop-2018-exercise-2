@@ -195,10 +195,10 @@ function TypeOf(node,line, level,toShow) {
 function TypeOfLevelTwo(node,line,toShow)
 {
     if (node.type == 'MemberExpression')
-    {
-        let prop = '';
+    {let prop = '';
         if (node.property.type == 'Identifier')
-            prop = checkIfInLines(line,node.property.name,toShow);
+        {prop = checkIfInLines(line,node.property.name,toShow);
+            prop = temp(prop,toShow);}
         else if (node.property.type == 'Literal')
         {prop = node.property.value;}
         else //if (node.property.type == 'BinaryExpression')
@@ -227,6 +227,12 @@ function TypeOfNotMemberExpressionLevelTwo(node,line,toShow) {
     // else if(node.type=='LogicalExpression')
     //     return 'log';
     return 'empty';
+}
+
+function temp(prop,toShow) {
+    if(toShow=='no')
+        prop = eval(prop);
+    return prop;
 }
 
 function checkIfInLines(line,name,toShow) {/////////frontal
